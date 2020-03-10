@@ -48,6 +48,11 @@
     <select id="getUser" resultType="User">
         select * from tb_user where userId = #{userId}
     </select>
+
+    <!--获取指定用户-->
+    <select id="getUserByAccount" resultType="User">
+        select * from tb_user where userName = #{account} or userMail = #{account} or userPhone = #{account}
+    </select>
     
     <!--注销用户-->
     <update id="logout" parameterType="java.lang.Integer">

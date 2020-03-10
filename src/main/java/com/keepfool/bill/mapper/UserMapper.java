@@ -4,8 +4,6 @@ import com.keepfool.bill.bean.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Mapper
 @Repository
 public interface UserMapper {
@@ -13,4 +11,5 @@ public interface UserMapper {
     int register(User user);
     User getUser(int userId);
     int logout(int userId);
+    User getUserByAccount(String account);
 }
