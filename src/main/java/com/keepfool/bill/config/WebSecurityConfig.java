@@ -12,10 +12,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -34,33 +36,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
+        http.authorizeRequests()
+                .antMatchers("/user").permitAll()
                 .antMatchers("/**").authenticated()
                 .and().formLogin().usernameParameter("account").passwordParameter("password").loginProcessingUrl("/login")
                 .successHandler(new LoginSuccessHandler())
                 .failureHandler(new LoginFailureHandler())
-                .and().logout().logoutUrl("logout").logoutSuccessHandler(new LogoutSuccessHandler() {
-            @Override
-            public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                Map<String, Object> map = new HashMap<>();
-                map.put("msg", "注销成功");
-                map.put("logoutState", true);
-                httpServletResponse.setContentType("application/json;charset=utf-8");
-                httpServletResponse.getWriter().print(new ObjectMapper().writeValueAsString(map));
-            }
-        })
+                .and().logout().logoutUrl("/logout").logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("msg", "注销成功");
+                        map.put("logoutState", true);
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
+                        httpServletResponse.getWriter().print(new ObjectMapper().writeValueAsString(map));
+                    }
+                })
                 .and().csrf().disable()
                 .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
-            @Override
-            public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-                httpServletResponse.setStatus(403);
-                httpServletResponse.setContentType("application/json;charset=utf-8");
-                Map<String, Object> map = new HashMap<>();
-                map.put("msg", "权限不足，访问失败");
-                httpServletResponse.getWriter().print(new ObjectMapper().writeValueAsString(map));
-            }
-        });
+                    @Override
+                    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
+                        httpServletResponse.setStatus(403);
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("msg", "权限不足，访问失败");
+                        httpServletResponse.getWriter().print(new ObjectMapper().writeValueAsString(map));
+                    }
+                })
+                .authenticationEntryPoint(new AuthenticationEntryPoint() {
+                    // 重写commence干掉未登录默认跳转的页面从而返回json数据
+                    @Override
+                    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("msg", "用户未登录，访问失败");
+                        httpServletResponse.getWriter().print(new ObjectMapper().writeValueAsString(map));
+                    }
+                });
     }
 
     @Override

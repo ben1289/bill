@@ -12,6 +12,7 @@ public class Bill {
     private int billAmount;
     private Date billTime;
     private String billRemark;
+    private Category category;
 
     public int getBillId() {
         return billId;
@@ -59,5 +60,26 @@ public class Bill {
 
     public void setBillRemark(String billRemark) {
         this.billRemark = billRemark;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "billId=" + billId +
+                ", userId=" + userId +
+                ", categoryId=" + categoryId +
+                ", billAmount=" + billAmount +
+                ", billTime=" + billTime +
+                ", billRemark='" + billRemark + '\'' +
+                ", category=" + category +
+                '}';
     }
 }

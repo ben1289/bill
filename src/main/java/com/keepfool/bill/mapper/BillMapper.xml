@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.keepfool.bill.mapper.BillMapper">
+
+    <!--账单明细-->
+    <resultMap id="billDetails" type="com.keepfool.bill.bean.Bill">
+        <id property="billId" column="billId"/>
+        <result property="billTime" column="billTime"/>
+        <result property="billAmount" column="billAmount"/>
+        <result property="billRemark" column="billRemark"/>
+        <association property="category" javaType="com.keepfool.bill.bean.Category">
+            <result property="categoryIcon" column="categoryIcon"/>
+        </association>
+    </resultMap>
+
+    <!--账单分类金额-->
+    <resultMap id="billAmount" type="com.keepfool.bill.bean.Bill">
+        <result property="billTime" column="billTime"/>
+        <result property="billAmount" column="billAmount"/>
+        <association property="category" javaType="com.keepfool.bill.bean.Category">
+            <result property="categoryState" column="categoryState"/>
+        </association>
+    </resultMap>
+
+    <!--月 收入 支出 总和-->
+    <resultMap id="stateAmount" type="com.keepfool.bill.bean.Bill">
+        <result property="billAmount" column="billAmount"/>
+        <association property="category" javaType="com.keepfool.bill.bean.Category">
+            <result property="categoryState" column="categoryState"/>
+        </association>
+    </resultMap>
+
+    <!--记账-->
+    <insert id="bookkeeping" parameterType="com.keepfool.bill.bean.Bill" useGeneratedKeys="true" keyProperty="billId">
+        insert into tb_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            userId, categoryId, billAmount, billTime,
+            <if test="billRemark != null and billRemark != ''">
+                billRemark
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{userId}, #{categoryId}, #{billAmount}, #{billTime},
+            <if test="billRemark != null and billRemark != ''">
+                #{billRemark}
+            </if>
+        </trim>
+    </insert>
+
+    <!--查询账单明细-->
+    <select id="getBillDetails" resultMap="billDetails">
+        SELECT billId, billTime, categoryIcon, billAmount, IFNULL(billRemark,categoryName) AS billRemark
+        FROM tb_bill, tb_category
+        WHERE tb_bill.categoryId = tb_category.categoryId
+        AND tb_bill.userId = #{userId}
+        AND DATE_FORMAT(billTime, '%Y%m') = DATE_FORMAT('${billTime}', '%Y%m')
+        ORDER BY billTime DESC
+    </select>
+
+    <!--查询账单分类金额-->
+    <select id="getBillCategoryAmount" resultMap="billAmount">
+        SELECT billTime, categoryState, SUM(billAmount) AS billAmount
+        FROM tb_bill, tb_category
+        WHERE tb_bill.categoryId = tb_category.categoryId
+            AND userId = #{userId}
+            AND DATE_FORMAT(billTime, '%Y%m') = DATE_FORMAT('${billTime}', '%Y%m')
+        GROUP BY billTime, tb_category.categoryState
+        ORDER BY billTime DESC
+    </select>
+
+    <!--查询月度支出和收入金额-->
+    <select id="getCategoryStateAmount" resultMap="stateAmount">
+        SELECT categoryState, SUM(billAmount) AS billAmount
+        FROM tb_bill, tb_category
+        WHERE tb_bill.categoryId = tb_category.categoryId
+            AND userId = #{userId}
+            AND DATE_FORMAT(billTime, '%Y%m') = DATE_FORMAT('${billTime}', '%Y%m')
+        GROUP BY categoryState
+    </select>
+</mapper>

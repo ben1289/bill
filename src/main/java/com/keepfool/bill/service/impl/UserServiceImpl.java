@@ -3,13 +3,13 @@ package com.keepfool.bill.service.impl;
 import com.keepfool.bill.bean.User;
 import com.keepfool.bill.mapper.UserMapper;
 import com.keepfool.bill.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserMapper userMapper;
-    @Autowired
+    final UserMapper userMapper;
+
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
     public int register(User user) {
         if (userMapper.userCount(user) > 0)
             return -1;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setUserPassword(encoder.encode(user.getPassword().trim()));
         userMapper.register(user);
         return user.getUserId();
     }
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public int logout(int userId) {
-        return userMapper.logout(userId);
+    public int logoff(int userId) {
+        return userMapper.logoff(userId);
     }
 }

@@ -10,7 +10,7 @@ import java.util.*;
 
 @Controller
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -23,7 +23,7 @@ public class UserController {
      * @return 用户id，-1：用户有重复
      */
     @ResponseBody
-    @PutMapping("/user")
+    @PostMapping("/user")
     public int register(@RequestBody User user) {
         return userService.register(user);
     }
@@ -57,7 +57,7 @@ public class UserController {
      */
     @ResponseBody
     @PutMapping("/user/{userId}")
-    public int logout(@PathVariable("userId") int userId) {
-        return userService.logout(userId);
+    public int logoff(@PathVariable("userId") int userId) {
+        return userService.logoff(userId);
     }
 }

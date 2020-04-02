@@ -40,4 +40,14 @@ public class Category {
     public void setCategoryState(int categoryState) {
         this.categoryState = categoryState;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", categoryIcon='" + categoryIcon + '\'' +
+                ", categoryState=" + categoryState +
+                '}';
+    }
 }

@@ -10,6 +10,6 @@ public interface UserMapper {
     int userCount(User user);
     int register(User user);
     User getUser(int userId);
-    int logout(int userId);
+    int logoff(int userId);
     User getUserByAccount(String account);
 }
