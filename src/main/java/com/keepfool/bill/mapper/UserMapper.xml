@@ -5,16 +5,17 @@
     <!--判断用户是否重复-->
     <select id="userCount" resultType="java.lang.Integer" parameterType="com.keepfool.bill.bean.User">
         select count(*) from tb_user where
-        <trim suffixOverrides="or"></trim>
-        <if test="userName != null and userName != ''">
-            userName = #{userName}
-        </if>
-        <if test="userMail != null and userMail != ''">
-            userMail = #{userMail}
-        </if>
-        <if test="userPhone != null and userPhone != ''">
-            userPhone = #{userPhone}
-        </if>
+        <trim suffixOverrides="or">
+            <if test="userName != null and userName != ''">
+                userName = #{userName}
+            </if>
+            <if test="userMail != null and userMail != ''">
+                or userMail = #{userMail}
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                or userPhone = #{userPhone}
+            </if>
+        </trim>
     </select>
     
     <!--新增用户-->
@@ -23,10 +24,10 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             userNickname,userName,
             <if test="userMail != null and userMail != ''">
-                userMail
+                userMail,
             </if>
             <if test="userPhone != null and userPhone != ''">
-                userPhone
+                userPhone,
             </if>
                 userPassword
         </trim>
@@ -34,10 +35,10 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{userNickname},#{userName},
             <if test="userMail != null and userMail != ''">
-                #{userMail}
+                #{userMail},
             </if>
             <if test="userPhone != null and userPhone != ''">
-                #{userPhone}
+                #{userPhone},
             </if>
             #{userPassword}
         </trim>

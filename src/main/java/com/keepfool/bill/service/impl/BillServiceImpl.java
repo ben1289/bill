@@ -23,6 +23,12 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public int modifyBills(Bill bill) {
+        billMapper.modifyBills(bill);
+        return bill.getBillId();
+    }
+
+    @Override
     public List<Map<String, Object>> getBillDetails(int userId, String billTime) {
         List<Bill> billCategoryAmount = billMapper.getBillCategoryAmount(userId, billTime);
         List<Bill> billDetails = billMapper.getBillDetails(userId, billTime);
@@ -61,5 +67,10 @@ public class BillServiceImpl implements BillService {
             map.put(state, item.getBillAmount());
         });
         return map;
+    }
+
+    @Override
+    public Bill getBillDetailByBillId(int billId) {
+        return billMapper.getBillDetailByBillId(billId);
     }
 }

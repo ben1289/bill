@@ -23,6 +23,12 @@ public class BillController {
     }
 
     @ResponseBody
+    @PostMapping("/modifyBill")
+    public int modifyBills(@RequestBody Bill bill) {
+        return billService.modifyBills(bill);
+    }
+
+    @ResponseBody
     @GetMapping("/bill/{userId}/{billTime}")
     public Map<String, Object> getBillDetails(@PathVariable("userId") int userId, @PathVariable("billTime") Date billTime) {
         Map<String, Object> map = new HashMap<>();
@@ -30,6 +36,22 @@ public class BillController {
         System.out.println(dateFormat.format(billTime));
         map.put("amount", billService.getCategoryStateAmount(userId, dateFormat.format(billTime)));
         map.put("list", billService.getBillDetails(userId, dateFormat.format(billTime)));
+        return map;
+    }
+
+    @ResponseBody
+    @GetMapping("/bill/{billId}")
+    public Map<String, Object> getBillDetailByBillId(@PathVariable("billId") int billId) {
+        Bill bill = billService.getBillDetailByBillId(billId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("billId", bill.getBillId());
+        map.put("categoryId", bill.getCategoryId());
+        map.put("categoryIcon", bill.getCategory().getCategoryIcon());
+        map.put("categoryName", bill.getCategory().getCategoryName());
+        map.put("categoryState", bill.getCategory().getCategoryState());
+        map.put("billAmount", bill.getBillAmount());
+        map.put("billTime", bill.getBillTime());
+        map.put("billRemark", bill.getBillRemark());
         return map;
     }
 }

@@ -30,6 +30,20 @@
         </association>
     </resultMap>
 
+    <!--单条账单明细-->
+    <resultMap id="billDetail" type="com.keepfool.bill.bean.Bill">
+        <id property="billId" column="billId"/>
+        <result property="categoryId" column="categoryId"/>
+        <result property="billAmount" column="billAmount"/>
+        <result property="billTime" column="billTime"/>
+        <result property="billRemark" column="billRemark"/>
+        <association property="category" javaType="com.keepfool.bill.bean.Category">
+            <result property="categoryIcon" column="categoryIcon"/>
+            <result property="categoryName" column="categoryName"/>
+            <result property="categoryState" column="categoryState"/>
+        </association>
+    </resultMap>
+
     <!--记账-->
     <insert id="bookkeeping" parameterType="com.keepfool.bill.bean.Bill" useGeneratedKeys="true" keyProperty="billId">
         insert into tb_bill
@@ -47,6 +61,28 @@
             </if>
         </trim>
     </insert>
+
+    <!--修改账单-->
+    <update id="modifyBills" parameterType="com.keepfool.bill.bean.Bill" useGeneratedKeys="true" keyProperty="billId">
+        UPDATE tb_bill
+        <set>
+            <trim suffixOverrides=",">
+                <if test="categoryId != null and categoryId != ''">
+                    categoryId = #{categoryId},
+                </if>
+                <if test="billAmount != null and billAmount != ''">
+                    billAmount = #{billAmount},
+                </if>
+                <if test="billTime != null">
+                    billTime = #{billTime},
+                </if>
+                <if test="billRemark != null and billRemark != ''">
+                    billRemark = #{billRemark}
+                </if>
+            </trim>
+        </set>
+        WHERE billId = #{billId}
+    </update>
 
     <!--查询账单明细-->
     <select id="getBillDetails" resultMap="billDetails">
@@ -78,4 +114,13 @@
             AND DATE_FORMAT(billTime, '%Y%m') = DATE_FORMAT('${billTime}', '%Y%m')
         GROUP BY categoryState
     </select>
+
+    <!--获取单条账单明细-->
+    <select id="getBillDetailByBillId" resultMap="billDetail">
+        SELECT billId, tb_bill.categoryId, categoryIcon, categoryName, categoryState, billAmount, billTime, billRemark
+        FROM tb_bill, tb_category
+        WHERE billId = #{billId} AND tb_bill.categoryId = tb_category.categoryId
+    </select>
+
+    <!--删除单条账单明细-->
 </mapper>

@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface BillService {
     int bookkeeping(Bill bill);
+    int modifyBills(Bill bill);
     List<Map<String, Object>> getBillDetails(int userId, String billTime);
     Map<String, Integer> getCategoryStateAmount(int userId, String billTime);
+    Bill getBillDetailByBillId(int billId);
 }
