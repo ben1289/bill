@@ -54,4 +54,10 @@ public class BillController {
         map.put("billRemark", bill.getBillRemark());
         return map;
     }
+
+    @ResponseBody
+    @DeleteMapping("/bill/{billId}")
+    public int deleteBillDetail(@PathVariable("billId") int billId) {
+        return billService.deleteBillDetail(billId);
+    }
 }

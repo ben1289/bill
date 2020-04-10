@@ -123,4 +123,8 @@
     </select>
 
     <!--删除单条账单明细-->
+    <delete id="deleteBillDetail" parameterType="integer">
+        DELETE FROM tb_bill
+        WHERE billId = #{billId}
+    </delete>
 </mapper>

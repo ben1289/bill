@@ -59,9 +59,9 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Map<String, Integer> getCategoryStateAmount(int userId, String billTime) {
+    public Map<String, Float> getCategoryStateAmount(int userId, String billTime) {
         List<Bill> categoryStateAmount = billMapper.getCategoryStateAmount(userId, billTime);
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Float> map = new HashMap<>();
         categoryStateAmount.forEach(item -> {
             String state = item.getCategory().getCategoryState() == 0 ? "expend" : "income";
             map.put(state, item.getBillAmount());
@@ -72,5 +72,10 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill getBillDetailByBillId(int billId) {
         return billMapper.getBillDetailByBillId(billId);
+    }
+
+    @Override
+    public int deleteBillDetail(int billId) {
+        return billMapper.deleteBillDetail(billId);
     }
 }

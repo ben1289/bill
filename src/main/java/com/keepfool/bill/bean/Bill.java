@@ -9,7 +9,7 @@ public class Bill {
     private int billId;
     private int userId;
     private int categoryId;
-    private int billAmount;
+    private float billAmount;
     private Date billTime;
     private String billRemark;
     private Category category;
@@ -38,11 +38,11 @@ public class Bill {
         this.categoryId = categoryId;
     }
 
-    public int getBillAmount() {
+    public float getBillAmount() {
         return billAmount;
     }
 
-    public void setBillAmount(int billAmount) {
+    public void setBillAmount(float billAmount) {
         this.billAmount = billAmount;
     }
 
