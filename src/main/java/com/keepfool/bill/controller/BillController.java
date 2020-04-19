@@ -60,4 +60,10 @@ public class BillController {
     public int deleteBillDetail(@PathVariable("billId") int billId) {
         return billService.deleteBillDetail(billId);
     }
+
+    @ResponseBody
+    @GetMapping("/getBillTime/{userId}")
+    public Map<String, Object> getBillTime(@PathVariable("userId") int userId) {
+        return billService.getBillTime(userId);
+    }
 }

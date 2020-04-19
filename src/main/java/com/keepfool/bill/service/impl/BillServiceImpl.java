@@ -78,4 +78,12 @@ public class BillServiceImpl implements BillService {
     public int deleteBillDetail(int billId) {
         return billMapper.deleteBillDetail(billId);
     }
+
+    @Override
+    public Map<String, Object> getBillTime(int userId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("first", billMapper.getFirstBillTime(userId));
+        map.put("years", billMapper.getAllBillTime(userId));
+        return map;
+    }
 }

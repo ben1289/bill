@@ -12,4 +12,5 @@ public interface BillService {
     Map<String, Float> getCategoryStateAmount(int userId, String billTime);
     Bill getBillDetailByBillId(int billId);
     int deleteBillDetail(int billId);
+    Map<String, Object> getBillTime(int userId);
 }

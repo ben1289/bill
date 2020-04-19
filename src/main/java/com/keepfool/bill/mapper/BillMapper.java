@@ -16,4 +16,6 @@ public interface BillMapper {
     List<Bill> getCategoryStateAmount(int userId, String billTime);
     Bill getBillDetailByBillId(int billId);
     int deleteBillDetail(int billId);
+    String getFirstBillTime(int userId);
+    List<String> getAllBillTime(int userId);
 }

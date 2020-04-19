@@ -127,4 +127,19 @@
         DELETE FROM tb_bill
         WHERE billId = #{billId}
     </delete>
+
+    <!--获取最早的账单日期-->
+    <select id="getFirstBillTime" parameterType="integer" resultType="string">
+        SELECT billTime FROM tb_bill
+        WHERE userId = #{userId}
+        ORDER BY billTime
+        LIMIT 1
+    </select>
+
+    <!--获取全部账单时间（年）-->
+    <select id="getAllBillTime" parameterType="integer" resultType="string">
+        SELECT DISTINCT(SUBSTR(billTime FROM 1 FOR 4)) AS billTime FROM tb_bill
+        WHERE userId = #{userId}
+        ORDER BY billTime
+    </select>
 </mapper>
