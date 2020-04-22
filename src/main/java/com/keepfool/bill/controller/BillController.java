@@ -66,4 +66,10 @@ public class BillController {
     public Map<String, Object> getBillTime(@PathVariable("userId") int userId) {
         return billService.getBillTime(userId);
     }
+
+    @ResponseBody
+    @GetMapping("/getBalance")
+    public Map<String, Float> getBalanceByYear(@RequestParam("userId") int userId, @RequestParam("year") String year) {
+        return billService.getBalanceByYear(userId, year);
+    }
 }

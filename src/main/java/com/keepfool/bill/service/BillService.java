@@ -13,4 +13,5 @@ public interface BillService {
     Bill getBillDetailByBillId(int billId);
     int deleteBillDetail(int billId);
     Map<String, Object> getBillTime(int userId);
+    Map<String, Float> getBalanceByYear(int userId, String year);
 }

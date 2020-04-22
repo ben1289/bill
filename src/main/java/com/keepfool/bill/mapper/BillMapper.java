@@ -18,4 +18,5 @@ public interface BillMapper {
     int deleteBillDetail(int billId);
     String getFirstBillTime(int userId);
     List<String> getAllBillTime(int userId);
+    List<Bill> getBalanceByYear(int userId, String year);
 }

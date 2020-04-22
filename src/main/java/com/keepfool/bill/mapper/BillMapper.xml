@@ -44,6 +44,13 @@
         </association>
     </resultMap>
 
+    <resultMap id="billBalance" type="com.keepfool.bill.bean.Bill">
+        <result property="billAmount" column="billAmount"/>
+        <association property="category" javaType="com.keepfool.bill.bean.Category">
+            <result property="categoryState" column="categoryState"/>
+        </association>
+    </resultMap>
+
     <!--记账-->
     <insert id="bookkeeping" parameterType="com.keepfool.bill.bean.Bill" useGeneratedKeys="true" keyProperty="billId">
         insert into tb_bill
@@ -141,5 +148,12 @@
         SELECT DISTINCT(SUBSTR(billTime FROM 1 FOR 4)) AS billTime FROM tb_bill
         WHERE userId = #{userId}
         ORDER BY billTime
+    </select>
+
+    <!--获取某年结余-->
+    <select id="getBalanceByYear" resultMap="billBalance">
+        SELECT tb_category.categoryState, COALESCE(SUM(billAmount),0) AS billAmount FROM tb_bill, tb_category
+        WHERE userId = #{userId} AND YEAR(billTime) = #{year} AND tb_bill.categoryId = tb_category.categoryId
+        GROUP BY tb_category.categoryState
     </select>
 </mapper>
