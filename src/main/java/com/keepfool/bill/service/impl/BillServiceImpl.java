@@ -88,15 +88,19 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Map<String, Float> getBalanceByYear(int userId, String year) {
-        List<Bill> bills = billMapper.getBalanceByYear(userId, year);
-        Map<String, Float> map = new HashMap<>();
-        float balance = 0;
-        for (Bill bill : bills) {
-            balance += bill.getBillAmount();
-            map.put(bill.getCategory().getCategoryState() == 0 ? "expend" : "income", bill.getBillAmount());
+    public Map<String, Object> getBalance(int userId, String year) {
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> list = billMapper.getBalance(userId, year);
+        float balanceTotal = 0, expend = 0, income = 0;
+        for (Map m : list) {
+            balanceTotal += (double) m.get("balance");
+            expend += (double) m.get("expend");
+            income += (double) m.get("income");
         }
-        map.put("balance", balance);
+        map.put("balanceTotal", balanceTotal);
+        map.put("expend", expend);
+        map.put("income", income);
+        map.put("balance", list);
         return map;
     }
 }

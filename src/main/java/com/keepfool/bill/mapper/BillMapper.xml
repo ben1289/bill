@@ -150,10 +150,15 @@
         ORDER BY billTime
     </select>
 
-    <!--获取某年结余-->
-    <select id="getBalanceByYear" resultMap="billBalance">
-        SELECT tb_category.categoryState, COALESCE(SUM(billAmount),0) AS billAmount FROM tb_bill, tb_category
+    <!--获取结余-->
+    <select id="getBalance" resultType="map">
+        SELECT DATE_FORMAT(billTime,'%m') months,
+        SUM(IF(categoryState=0,billAmount,0)) expend,
+        SUM(IF(categoryState=1,billAmount,0)) income,
+        SUM(billAmount) balance
+        FROM tb_bill, tb_category
         WHERE userId = #{userId} AND YEAR(billTime) = #{year} AND tb_bill.categoryId = tb_category.categoryId
-        GROUP BY tb_category.categoryState
+        GROUP BY months
+        ORDER BY months DESC
     </select>
 </mapper>

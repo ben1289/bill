@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -18,5 +19,5 @@ public interface BillMapper {
     int deleteBillDetail(int billId);
     String getFirstBillTime(int userId);
     List<String> getAllBillTime(int userId);
-    List<Bill> getBalanceByYear(int userId, String year);
+    List<Map<String, Object>> getBalance(int userId, String year);
 }
