@@ -30,20 +30,19 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public List<Map<String, Object>> getBillDetails(int userId, String billTime) {
-        List<Bill> billCategoryAmount = billMapper.getBillCategoryAmount(userId, billTime);
+        List<Map<String, Object>> billCategoryAmount = billMapper.getBillCategoryAmount(userId, billTime);
         List<Bill> billDetails = billMapper.getBillDetails(userId, billTime);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Map<String, Object>> lists = new ArrayList<>();
 
         billCategoryAmount.forEach(item -> {
             Map<String, Object> map = new HashMap<>();
-            map.put("date", dateFormat.format(item.getBillTime()));
-            map.put("income", item.getCategory().getCategoryState() == 1 ? item.getBillAmount() : 0);
-            map.put("expend", item.getCategory().getCategoryState() == 0 ? item.getBillAmount() : 0);
+            map.put("date", item.get("billTime"));
+            map.put("expend", item.get("expend"));
+            map.put("income", item.get("income"));
 
             List<Map<String, Object>> list = new ArrayList<>();
             billDetails.forEach(detail -> {
-                if (detail.getBillTime().equals(item.getBillTime())) {
+                if (detail.getBillTime().equals(item.get("billTime"))) {
                     Map<String, Object> detailsMap = new HashMap<>();
                     detailsMap.put("billId", detail.getBillId());
                     detailsMap.put("icon", detail.getCategory().getCategoryIcon());

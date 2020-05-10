@@ -14,13 +14,13 @@
     </resultMap>
 
     <!--账单分类金额-->
-    <resultMap id="billAmount" type="com.keepfool.bill.bean.Bill">
-        <result property="billTime" column="billTime"/>
-        <result property="billAmount" column="billAmount"/>
-        <association property="category" javaType="com.keepfool.bill.bean.Category">
-            <result property="categoryState" column="categoryState"/>
-        </association>
-    </resultMap>
+<!--    <resultMap id="billAmount" type="com.keepfool.bill.bean.Bill">-->
+<!--        <result property="billTime" column="billTime"/>-->
+<!--        <result property="billAmount" column="billAmount"/>-->
+<!--        <association property="category" javaType="com.keepfool.bill.bean.Category">-->
+<!--            <result property="categoryState" column="categoryState"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
 
     <!--月 收入 支出 总和-->
     <resultMap id="stateAmount" type="com.keepfool.bill.bean.Bill">
@@ -102,13 +102,13 @@
     </select>
 
     <!--查询账单分类金额-->
-    <select id="getBillCategoryAmount" resultMap="billAmount">
-        SELECT billTime, categoryState, SUM(billAmount) AS billAmount
+    <select id="getBillCategoryAmount" resultType="map">
+        SELECT billTime, SUM(IF(categoryState=0,billAmount,0)) expend, SUM(IF(categoryState=1,billAmount,0)) income
         FROM tb_bill, tb_category
         WHERE tb_bill.categoryId = tb_category.categoryId
             AND userId = #{userId}
             AND DATE_FORMAT(billTime, '%Y%m') = DATE_FORMAT('${billTime}', '%Y%m')
-        GROUP BY billTime, tb_category.categoryState
+        GROUP BY billTime
         ORDER BY billTime DESC
     </select>
 

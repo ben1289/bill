@@ -13,7 +13,7 @@ public interface BillMapper {
     int bookkeeping(Bill bill);
     int modifyBills(Bill bill);
     List<Bill> getBillDetails(int userId, String billTime);
-    List<Bill> getBillCategoryAmount(int userId, String billTime);
+    List<Map<String, Object>> getBillCategoryAmount(int userId, String billTime);
     List<Bill> getCategoryStateAmount(int userId, String billTime);
     Bill getBillDetailByBillId(int billId);
     int deleteBillDetail(int billId);
